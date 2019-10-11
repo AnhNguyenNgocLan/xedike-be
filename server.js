@@ -10,6 +10,7 @@ mongoose
     .catch(console.log);
 
 const app = express();
+app.use('/', express.static('public'));
 
 //middleware body parser
 app.use(express.urlencoded({ extended: true }));
