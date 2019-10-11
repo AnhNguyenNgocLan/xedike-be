@@ -1,14 +1,20 @@
 const express = require("express");
 const mongoose = require("mongoose");
 
+
+
+const mongoUri =
+    process.env.NODE_ENV === 'dev'
+        ? process.env.MONGO_URI_DEV
+        : process.env.MONGO_URI_PROD;
+
 mongoose
-    .connect("mongodb://localhost:27017/xedike-database", {
+    .connect(mongoUri, {
         useNewUrlParser: true,
         useCreateIndex: true
     })
-    .then(console.log("Ket noi MongoDB :D"))
+    .then(() => console.log('Connect successfully'))
     .catch(console.log);
-
 const app = express();
 app.use('/', express.static('public'));
 

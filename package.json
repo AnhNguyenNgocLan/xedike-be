@@ -5,8 +5,8 @@
   "main": "\u001b[D\u001b[D\u001b[D\u001bserver\u001b[C\u001b[D.js)",
   "scripts": {
     "start": "node server.js",
-    "debug": "nodemon server.js"
-  },
+    "debug": "export NODE_ENV=dev && nodemon server.js"
+},
   "author": "",
   "license": "ISC",
   "dependencies": {
