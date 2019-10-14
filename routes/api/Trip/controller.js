@@ -26,6 +26,7 @@ module.exports.createTrip = (req, res, next) => {
         .save()
         .then(trip => {
             res.status(200).json(trip);
+            console.log(trip)
         })
         .catch(err => res.json(err));
 };
