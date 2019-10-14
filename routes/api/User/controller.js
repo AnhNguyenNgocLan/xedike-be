@@ -58,8 +58,6 @@ module.exports.getUsers = (req, res, next) => {
 // Get user by id
 module.exports.getUserById = (req, res, next) => {
     const { id } = req.params;
-    if (!mongoose.Types.ObjectId.isValid(id))
-        return res.status(400).json({ message: "id invalid" });
 
     User.findById(id)
         .select("-__v -password")
@@ -159,19 +157,20 @@ module.exports.login = (req, res, next) => {
 
             bcryptjs.compare(password, user.password, (err, isMatch) => {
                 if (!isMatch)
-                    return res
-                        .status(400)
-                        .json('Wrong email or password');
+                    return res.status(400).json("Wrong email or password");
 
                 const payload = {
                     id: user._id,
                     email: user.email,
-                    userType: user.userType
+                    // userType: user.userType,
+                    fullName: user.fullName
                 };
+
+                
 
                 jwt.sign(
                     payload,
-                    "XEDIKE",
+                    process.env.SECRET_KEY,
                     { expiresIn: 3600 },
                     (err, token) => {
                         if (err) res.json(err);

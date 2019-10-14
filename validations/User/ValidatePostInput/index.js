@@ -48,7 +48,7 @@ const validatePostInput = async data => {
 
     // user type
     if (validator.isEmpty(data.userType)) {
-        errors.userType = "User type is required";
+        errors.userType = "Chọn phân loại người dùng.";
     } else if (
         !validator.equals(data.userType, "driver") &&
         !validator.equals(data.userType, "passenger") &&
@@ -59,9 +59,11 @@ const validatePostInput = async data => {
 
     //phone
     if (validator.isEmpty(data.phoneNumber)) {
-        errors.phoneNumber = "Phone is required";
+        errors.phoneNumber = "Nhấp số điện thoại.";
     } else if (!validator.isLength(data.phoneNumber, { min: 1, max: 10 })) {
-        errors.phoneNumber = "Phone must have 10 characters";
+        errors.phoneNumber = "Số điện thoại từ 1 đến 10 ký tự";
+    } else if (!validator.isNumeric(data.phoneNumber)) {
+        errors.phoneNumber = "Chỉ nhập số.";
     }
 
     return {
