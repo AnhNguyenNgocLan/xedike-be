@@ -25,9 +25,15 @@ module.exports.createTrip = (req, res, next) => {
     newTrip
         .save()
         .then(trip => {
-            res.status(200).json(trip);
-            console.log(trip)
+            return Trip.findById(trip._id)
+                .populate("driverId", "fullName")
+                .select("-__v");
         })
+        .then(result => {
+            res.status(200).json(result);
+            console.log(result);
+        })
+
         .catch(err => res.json(err));
 };
 
@@ -121,23 +127,22 @@ module.exports.searchTrips = (req, res, next) => {
     let aaa = moment(queryString.startTime).valueOf();
     //console.log(queryString);
     console.log(aaa);
-    
 
     Trip.find()
         .and([
             { locationFrom: queryString.from },
             { locationTo: queryString.to },
-            { availableSeats: { $gte: parseInt(queryString.slot) } },
+            { availableSeats: { $gte: parseInt(queryString.slot) } }
             // { startTime: { $gte: aaa } }
             // { startTime: { $gte: parseInt(aaa) } }
             //])
         ])
-        
+
         .populate("driverID", "fullName")
         .then(trip => {
             if (_.isEmpty(trip))
                 return Promise.reject({ status: 404, message: "Not found!" });
-            console.log("ket qua: ",trip);
+
             res.status(200).json(trip);
         })
         .catch(err => {

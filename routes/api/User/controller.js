@@ -162,7 +162,7 @@ module.exports.login = (req, res, next) => {
                 const payload = {
                     id: user._id,
                     email: user.email,
-                    // userType: user.userType,
+                    userType: user.userType,
                     fullName: user.fullName
                 };
 

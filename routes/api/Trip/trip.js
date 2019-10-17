@@ -7,7 +7,7 @@ const { authenticate, authorize } = require("../../../middlewares/auth");
 router.post(
     "/",
     authenticate,
-    //   authorize(['driver']),
+    authorize(['driver']),
     tripController.createTrip
 );
 
