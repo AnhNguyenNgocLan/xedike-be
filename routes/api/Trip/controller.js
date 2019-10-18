@@ -4,7 +4,7 @@ const url = require("url");
 const moment = require("moment");
 // Create Trip
 module.exports.createTrip = (req, res, next) => {
-    const driverId = req.user.id;
+    const driverID = req.user.id;
     const {
         locationFrom,
         locationTo,
@@ -14,7 +14,7 @@ module.exports.createTrip = (req, res, next) => {
     } = req.body;
 
     const newTrip = new Trip({
-        driverId,
+        driverID,
         locationFrom,
         locationTo,
         startTime: moment(startTime).valueOf(),
@@ -26,7 +26,7 @@ module.exports.createTrip = (req, res, next) => {
         .save()
         .then(trip => {
             return Trip.findById(trip._id)
-                .populate("driverId", "fullName")
+                .populate("driverID", "fullName")
                 .select("-__v");
         })
         .then(result => {
@@ -39,6 +39,7 @@ module.exports.createTrip = (req, res, next) => {
 
 module.exports.getTrips = (req, res, next) => {
     Trip.find()
+        .populate("driverID")
         .then(trips => res.status(200).json(trips))
         .catch(err => res.json(err));
 };
@@ -46,8 +47,11 @@ module.exports.getTrips = (req, res, next) => {
 module.exports.getTripById = (req, res, next) => {
     const { tripId } = req.params;
     Trip.findById(tripId)
-        .populate("driverId", "avatar email -_id")
-        .then(trip => res.status(200).json(trip))
+        .populate("driverID")
+        .then(trip => {
+            res.status(200).json(trip);
+            console.log(trip);
+        })
         .catch(err => res.json(err));
 };
 
@@ -125,8 +129,6 @@ module.exports.searchTrips = (req, res, next) => {
     let queryString = url.parse(req.url, true).query;
 
     let aaa = moment(queryString.startTime).valueOf();
-    //console.log(queryString);
-    console.log(aaa);
 
     Trip.find()
         .and([
