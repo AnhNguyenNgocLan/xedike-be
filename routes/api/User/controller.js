@@ -19,7 +19,7 @@ module.exports.createUser = async (req, res, next) => {
     } = req.body;
 
     const { errors, isValid } = await validatePostInput(req.body);
-    console.log(errors);
+
     if (!isValid) return res.status(400).json(errors);
 
     const newUser = new User({
@@ -104,9 +104,7 @@ module.exports.updateUser = async (req, res, next) => {
 module.exports.updatePassword = async (req, res, next) => {
     const { id } = req.params;
     const { errors, isValid } = await validatePassword(req.body);
-    const { password, newPassword } = req.body;
-
-    console.log(errors);
+    const { password, newPassword } = req.body; 
 
     // if (!isValid) return res.status(400).json(errors);
     User.findById(id)
@@ -184,8 +182,6 @@ module.exports.login = (req, res, next) => {
         })
         .catch(err => {
             if (!err.status) return res.json(err);
-            console.log(err);
-
             res.status(err.status).json(err.message);
         });
 };
@@ -196,17 +192,18 @@ module.exports.getUserTrips = (req, res, next) => {
 
     Trip.find()
         .populate("driverID")
+        .select("-_id -__v")
         .then(trips => {
             let myTripArr = [];
 
-            _.forEach(trips, trip => {
-                _.forEach(trip.passengers, passenger => {
+            _.forEach(trips, trip => {              
+                _.forEach(trip.passengers, passenger => { 
                     if (passenger.passengerID == userID) {
                         myTripArr.push(trip);
                     }
                 });
             });
-            
+
             res.status(200).json(myTripArr);
         })
         .catch(err => {

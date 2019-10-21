@@ -84,8 +84,8 @@ module.exports.updateTrip = (req, res, next) => {
 };
 
 module.exports.bookTrip = (req, res, next) => {
-    const passengerId = req.user.id;
-    const { numberOfBookingSeats } = req.body;
+    const passengerID = req.user.id;
+    const { numberOfBookingSeats, locationFrom, locationTo, note } = req.body;
     const { tripId } = req.params;
     
     Trip.findById(tripId)
@@ -97,8 +97,11 @@ module.exports.bookTrip = (req, res, next) => {
                 });
 
             const passenger = {
-                passengerId,
-                numberOfBookingSeats
+                passengerID,
+                numberOfBookingSeats,
+                locationFrom,
+                locationTo,
+                note
             };
 
             trip.passengers.push(passenger);
