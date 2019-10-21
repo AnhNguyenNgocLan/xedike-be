@@ -1,10 +1,11 @@
 const { User } = require("../../../models/User/user");
+const { Trip } = require("../../../models/Trip/trip");
 const bcryptjs = require("bcryptjs");
-const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const validatePostInput = require("../../../validations/User/ValidatePostInput");
 const validatePassword = require("../../../validations/User/ValidateMyPassword");
 const validateUpdateInfoInput = require("../../../validations/User/ValidateMyInfo");
+const _ = require("lodash");
 
 // Add a new user
 module.exports.createUser = async (req, res, next) => {
@@ -147,6 +148,7 @@ module.exports.updatePassword = async (req, res, next) => {
 // User Login
 module.exports.login = (req, res, next) => {
     const { email, password } = req.body;
+
     User.findOne({ email })
         .then(user => {
             if (!user)
@@ -165,8 +167,6 @@ module.exports.login = (req, res, next) => {
                     userType: user.userType,
                     fullName: user.fullName
                 };
-
-                
 
                 jwt.sign(
                     payload,
@@ -187,6 +187,30 @@ module.exports.login = (req, res, next) => {
             console.log(err);
 
             res.status(err.status).json(err.message);
+        });
+};
+
+// Get User Trips
+module.exports.getUserTrips = (req, res, next) => {
+    const userID = req.user.id;
+
+    Trip.find()
+        .populate("driverID")
+        .then(trips => {
+            let myTripArr = [];
+
+            _.forEach(trips, trip => {
+                _.forEach(trip.passengers, passenger => {
+                    if (passenger.passengerID == userID) {
+                        myTripArr.push(trip);
+                    }
+                });
+            });
+            
+            res.status(200).json(myTripArr);
+        })
+        .catch(err => {
+            res.json(err);
         });
 };
 

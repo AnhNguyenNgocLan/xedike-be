@@ -11,7 +11,7 @@ const UserSchema = mongoose.Schema({
     numberOfTrips: { type: Number, default: 0 },
     numberOfKm: { type: Number, default: 0 },
     avatar: { type: String },
-    isActive: { type: Boolean, dafault: true }
+    rating: { type: Number, default: 0 }
 });
 
 const User = mongoose.model("User", UserSchema, "User");

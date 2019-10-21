@@ -4,8 +4,9 @@ const authenticate = (req, res, next) => {
     const { token } = req.headers;
     jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
         if (err) return res.status(401).json({ message: "Token invalid" });
+       
         if (decoded) {
-            req.user = decoded;
+            req.user = decoded; 
             return next();
         }
     });

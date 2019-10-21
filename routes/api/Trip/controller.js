@@ -30,8 +30,7 @@ module.exports.createTrip = (req, res, next) => {
                 .select("-__v");
         })
         .then(result => {
-            res.status(200).json(result);
-            console.log(result);
+            res.status(200).json(result);            
         })
 
         .catch(err => res.json(err));
@@ -49,8 +48,7 @@ module.exports.getTripById = (req, res, next) => {
     Trip.findById(tripId)
         .populate("driverID")
         .then(trip => {
-            res.status(200).json(trip);
-            console.log(trip);
+            res.status(200).json(trip);            
         })
         .catch(err => res.json(err));
 };
@@ -89,6 +87,7 @@ module.exports.bookTrip = (req, res, next) => {
     const passengerId = req.user.id;
     const { numberOfBookingSeats } = req.body;
     const { tripId } = req.params;
+    
     Trip.findById(tripId)
         .then(trip => {
             if (trip.availableSeats < numberOfBookingSeats)
