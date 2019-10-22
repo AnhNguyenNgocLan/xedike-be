@@ -39,6 +39,9 @@ app.use(function(req, res, next) {
     next();
 });
 
+//middleware serve static file
+app.use('/uploads/avatars', express.static('./uploads/avatars'))
+
 //router
 app.use("/api/users", require("./routes/api/User/users"));
 app.use("/api/trips", require("./routes/api/Trip/trip"));

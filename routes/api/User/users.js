@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const userController = require("./controller");
 const { authenticate, authorize } = require("../../../middlewares/auth");
+const uploadImage = require("../../../middlewares/uploadImage");
 
 router.get("/my-trips", authenticate, userController.getUserTrips);
 router.post("/register", userController.createUser);
@@ -16,5 +17,6 @@ router.delete(
     authorize(["driver"]),
     userController.deleteUserById
 );
+router.post("/upload-avatar/:id", uploadImage("avatar"), userController.uploadAvatar)
 
 module.exports = router;

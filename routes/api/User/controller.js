@@ -218,3 +218,20 @@ module.exports.deleteUserById = (req, res, next) => {
         .then(result => res.status(200).json(result))
         .catch(err => res.json(err));
 };
+
+module.exports.uploadAvatar = (req, res, next) => {
+    const { id } = req.params;
+
+    User.findById(id)
+        .then(user => {
+            user.avatar = req.file.location;
+
+            return user.save();
+        })
+        .then(user => {
+            res.status(200).json(user);
+        })
+        .catch(err => {
+            res.status(200).json({ message: err.message });
+        });
+};
