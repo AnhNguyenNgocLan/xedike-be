@@ -46,6 +46,7 @@ app.use('/uploads/avatars', express.static('./uploads/avatars'))
 app.use("/api/users", require("./routes/api/User/users"));
 app.use("/api/trips", require("./routes/api/Trip/trip"));
 app.use("/api/provinces", require("./routes/api/Province/province"));
+app.use("/api/vehicles", require("./routes/api/Vehicle/vehicles"))
 
 const port = process.env.PORT || 5000;
 
