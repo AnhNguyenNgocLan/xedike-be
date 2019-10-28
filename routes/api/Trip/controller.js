@@ -136,8 +136,8 @@ module.exports.searchTrips = (req, res, next) => {
         .and([
             { locationFrom: queryString.from },
             { locationTo: queryString.to },
-            { availableSeats: { $gte: parseInt(queryString.slot) } }
-            // { startTime: { $gte: aaa } }
+            { availableSeats: { $gte: parseInt(queryString.slot) } },
+            { startTime: { $gte: aaa } }
             // { startTime: { $gte: parseInt(aaa) } }
             //])
         ])

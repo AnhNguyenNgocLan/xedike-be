@@ -1,5 +1,6 @@
 const { User } = require("../../../models/User/user");
 const { Trip } = require("../../../models/Trip/trip");
+const { Vehicle } = require("../../../models/Vehicle/vehicle");
 const bcryptjs = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const validatePostInput = require("../../../validations/User/ValidatePostInput");
@@ -57,22 +58,40 @@ module.exports.getUsers = (req, res, next) => {
 };
 
 // Get user by id
+// module.exports.getUserById = (req, res, next) => {
+//     const { id } = req.params;
+
+//     User.findById(id)
+//         .select("-__v -password")
+//         .then(user => {
+//             if (!user)
+//                 return Promise.reject({
+//                     status: 404,
+//                     message: "User not found"
+//                 });
+
+//             res.status(200).json(user);
+//         })
+//         .catch(err => {
+//             res.status(err.status).json({ message: err.message });
+//         });
+// };
+
+// * Get user detail
 module.exports.getUserById = (req, res, next) => {
     const { id } = req.params;
 
-    User.findById(id)
-        .select("-__v -password")
-        .then(user => {
-            if (!user)
-                return Promise.reject({
-                    status: 404,
-                    message: "User not found"
-                });
+    Promise.all([
+        User.findById(id).select("-password -__v"),
+        Vehicle.find({ driverID: id })
+    ])
+        .then(results => {
+            const [user, vehicles] = results;
 
-            res.status(200).json(user);
+            res.status(201).json({ user: user, vehicles: vehicles });
         })
         .catch(err => {
-            res.status(err.status).json({ message: err.message });
+            res.status(err.status).json(err);
         });
 };
 
@@ -104,7 +123,7 @@ module.exports.updateUser = async (req, res, next) => {
 module.exports.updatePassword = async (req, res, next) => {
     const { id } = req.params;
     const { errors, isValid } = await validatePassword(req.body);
-    const { password, newPassword } = req.body; 
+    const { password, newPassword } = req.body;
 
     // if (!isValid) return res.status(400).json(errors);
     User.findById(id)
@@ -196,8 +215,8 @@ module.exports.getUserTrips = (req, res, next) => {
         .then(trips => {
             let myTripArr = [];
 
-            _.forEach(trips, trip => {              
-                _.forEach(trip.passengers, passenger => { 
+            _.forEach(trips, trip => {
+                _.forEach(trip.passengers, passenger => {
                     if (passenger.passengerID == userID) {
                         myTripArr.push(trip);
                     }

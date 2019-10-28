@@ -12,7 +12,8 @@ router.post(
 );
 router.post(
     "upload-vehicle-img/:id",
-    uploadImage("avatar", vehicleController.uploadVehicleImage)
+    uploadImage("vehicleImage", vehicleController.uploadVehicleImage)
 );
+router.get("/", vehicleController.getVehicle)
 
 module.exports = router;

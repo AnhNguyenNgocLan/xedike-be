@@ -25,7 +25,6 @@ module.exports.createVehicle = async (req, res, next) => {
 
     newVehicle
         .save()
-        .select("-__v")
         .then(result => {
             res.status(200).json(result);
         })
@@ -37,7 +36,6 @@ module.exports.getVehicle = (req, res, next) => {
     Vehicle.find()
         .then(vehicles => {
             res.status(200).json(vehicles);
-            //console.log(provinces);
         })
         .catch(err => res.json(err));
 };
