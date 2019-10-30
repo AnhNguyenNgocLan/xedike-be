@@ -48,7 +48,7 @@ router.put(
 router.put(
     "/finish-trip/:tripId",
     authenticate,
-    authorize(["driver"]),
+    authorize(["passenger"]),
     tripController.finishTrip
 );
 

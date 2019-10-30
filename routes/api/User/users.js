@@ -17,6 +17,12 @@ router.delete(
     authorize(["driver"]),
     userController.deleteUserById
 );
-router.post("/upload-avatar/:id", uploadImage("avatar"), userController.uploadAvatar)
+router.post("/upload-avatar/:id", uploadImage("avatar"), userController.uploadAvatar);
+router.put(
+    '/rating/:id',
+    authenticate,
+    authorize(['passenger']),
+    userController.ratingDriver
+);
 
 module.exports = router;

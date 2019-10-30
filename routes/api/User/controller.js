@@ -211,7 +211,7 @@ module.exports.getUserTrips = (req, res, next) => {
 
     Trip.find()
         .populate("driverID")
-        .select("-_id -__v")
+        .select("-__v")
         .then(trips => {
             let myTripArr = [];
 
@@ -252,5 +252,32 @@ module.exports.uploadAvatar = (req, res, next) => {
         })
         .catch(err => {
             res.status(200).json({ message: err.message });
+        });
+};
+
+module.exports.ratingDriver = (req, res, next) => {
+    const { userType } = req.user;
+    const { id } = req.params;
+    const { rating } = req.body;
+
+    User.findById(id)
+        .then(res => {
+            if (userType !== 'passenger')
+                return Promise.reject({
+                    status: 400,
+                    message: 'Chỉ có hành khách được đánh giá.'
+                });
+
+            res.rating = parseInt(rating);
+
+            return res.save();
+        })
+        .then(user => {
+            res.status(201).json(user);
+        })
+        .catch(err => {
+            if (!err.status) return res.json(err);
+
+            res.status(err.status).json(err.message);
         });
 };
